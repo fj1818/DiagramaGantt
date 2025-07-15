@@ -1,0 +1,386 @@
+/* =====================================================
+   Responsive Design - Estilos Adaptativos
+   ===================================================== */
+
+
+/* Breakpoints del Sistema */
+
+
+/*
+  - xs: 0px - 575px    (móviles pequeños)
+  - sm: 576px - 767px  (móviles grandes)
+  - md: 768px - 991px  (tablets)
+  - lg: 992px - 1199px (desktop pequeño)
+  - xl: 1200px+        (desktop grande)
+*/
+
+
+/* ===== TABLET Y MÓVIL ===== */
+
+@media screen and (max-width: 991px) {
+    /* Toolbar Adaptativo */
+    .toolbar {
+        flex-wrap: wrap;
+        padding: var(--spacing-sm) var(--spacing-md);
+        min-height: auto;
+        gap: var(--spacing-sm);
+    }
+    .toolbar-section {
+        gap: var(--spacing-sm);
+    }
+    .toolbar-center {
+        order: 3;
+        flex: 1 1 100%;
+        justify-content: center;
+        margin-top: var(--spacing-sm);
+    }
+    /* Título más compacto */
+    .app-title {
+        font-size: var(--font-size-xl);
+    }
+    .title-icon {
+        font-size: var(--font-size-2xl);
+    }
+    /* Botones más compactos */
+    .action-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+    .btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-xs);
+        min-width: 120px;
+    }
+    .btn-text {
+        display: none;
+    }
+    .btn-icon {
+        font-size: var(--font-size-base);
+    }
+    /* Panel de personalización más ancho en tablet */
+    .customization-panel {
+        width: 280px;
+        max-height: 300px;
+    }
+    /* Controles de vista más compactos */
+    .view-controls {
+        padding: var(--spacing-xs) var(--spacing-md);
+    }
+    .btn-view {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-xs);
+    }
+    /* Contenido principal adaptativo */
+    .main-content {
+        padding: var(--spacing-md);
+        grid-template-rows: auto auto 1fr;
+        gap: var(--spacing-md);
+    }
+    /* Canvas más pequeño */
+    .canvas-container {
+        height: 300px;
+    }
+}
+
+
+/* ===== MÓVILES ===== */
+
+@media screen and (max-width: 767px) {
+    /* Toolbar móvil */
+    .toolbar {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-xs);
+    }
+    .toolbar-section {
+        width: 100%;
+        justify-content: center;
+    }
+    .toolbar-left,
+    .toolbar-right {
+        flex: 1;
+    }
+    .toolbar-left {
+        order: 1;
+    }
+    .toolbar-right {
+        order: 2;
+    }
+    .toolbar-center {
+        order: 3;
+        margin-top: 0;
+    }
+    /* Título móvil */
+    .app-title {
+        font-size: var(--font-size-lg);
+        justify-content: center;
+    }
+    /* Botones solo iconos en móvil */
+    .btn {
+        min-width: auto;
+        padding: var(--spacing-sm);
+        aspect-ratio: 1;
+        justify-content: center;
+    }
+    .btn-text {
+        display: none;
+    }
+    .btn-icon {
+        font-size: var(--font-size-lg);
+    }
+    /* Grupo de botones en fila */
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-xs);
+        width: 100%;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+    }
+    /* Panel de personalización pantalla completa en móvil */
+    .customization-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-height: none;
+        border-radius: 0;
+        transform: translateY(100%);
+    }
+    .customization-panel:not([hidden]) {
+        transform: translateY(0);
+    }
+    /* Botones de vista como carrusel */
+    .view-buttons {
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        gap: var(--spacing-xs);
+        padding: var(--spacing-xs);
+    }
+    .view-buttons::-webkit-scrollbar {
+        display: none;
+    }
+    .btn-view {
+        flex: 0 0 auto;
+        min-width: 80px;
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-xs);
+    }
+    /* Contenido principal en móvil */
+    .main-content {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-sm);
+    }
+    /* Secciones apiladas en móvil */
+    .task-section,
+    .diagram-section {
+        padding: var(--spacing-sm);
+    }
+    .section-title {
+        font-size: var(--font-size-lg);
+    }
+    /* Canvas móvil */
+    .canvas-container {
+        height: 250px;
+    }
+    /* Tabla responsive */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* Notificaciones móviles */
+    .notifications {
+        left: var(--spacing-sm);
+        right: var(--spacing-sm);
+        top: auto;
+        bottom: var(--spacing-sm);
+    }
+    .notification {
+        margin-bottom: var(--spacing-xs);
+    }
+}
+
+
+/* ===== MÓVILES PEQUEÑOS ===== */
+
+@media screen and (max-width: 575px) {
+    /* Espaciado más compacto */
+    .toolbar {
+        padding: var(--spacing-xs);
+    }
+    .app-title {
+        font-size: var(--font-size-base);
+    }
+    .title-icon {
+        font-size: var(--font-size-xl);
+    }
+    /* Botones extra pequeños */
+    .btn {
+        padding: var(--spacing-xs);
+    }
+    .btn-icon {
+        font-size: var(--font-size-base);
+    }
+    /* Vista simplificada */
+    .btn-view {
+        min-width: 60px;
+        padding: var(--spacing-xs);
+    }
+    /* Contenido ultra compacto */
+    .main-content {
+        padding: var(--spacing-xs);
+    }
+    .canvas-container {
+        height: 200px;
+    }
+}
+
+
+/* ===== DESKTOP GRANDE ===== */
+
+@media screen and (min-width: 1200px) {
+    /* Toolbar expandido */
+    .toolbar {
+        padding: var(--spacing-lg) var(--spacing-2xl);
+    }
+    /* Botones con texto completo */
+    .btn {
+        padding: var(--spacing-sm) var(--spacing-lg);
+    }
+    .btn-text {
+        display: inline;
+    }
+    /* Panel de personalización más amplio */
+    .customization-panel {
+        width: 380px;
+        max-height: 500px;
+    }
+    /* Canvas más grande */
+    .canvas-container {
+        height: 500px;
+    }
+    /* Contenido con más espacio */
+    .main-content {
+        padding: var(--spacing-2xl);
+    }
+}
+
+
+/* ===== ORIENTACIÓN LANDSCAPE MÓVIL ===== */
+
+@media screen and (max-width: 767px) and (orientation: landscape) {
+    /* Toolbar más compacto en landscape */
+    .toolbar {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    .toolbar-section {
+        width: auto;
+    }
+    .toolbar-center {
+        order: 2;
+        margin-top: 0;
+        flex: 1;
+    }
+    /* Título más pequeño */
+    .app-title {
+        font-size: var(--font-size-sm);
+    }
+    /* Botones muy compactos */
+    .action-buttons {
+        display: flex;
+        gap: var(--spacing-xs);
+    }
+    .btn {
+        padding: var(--spacing-xs);
+        min-width: auto;
+    }
+    /* Canvas adaptado para landscape */
+    .canvas-container {
+        height: 200px;
+    }
+}
+
+
+/* ===== MEJORAS DE ACCESIBILIDAD RESPONSIVE ===== */
+
+
+/* Aumentar área de toque en móviles */
+
+@media (hover: none) and (pointer: coarse) {
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    .btn-view {
+        min-height: 44px;
+    }
+    .btn-close {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+
+/* Optimización para pantallas de alta densidad */
+
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    .toolbar {
+        border-bottom-width: 0.5px;
+    }
+    .btn {
+        border-width: 0.5px;
+    }
+}
+
+
+/* Modo oscuro adaptativo */
+
+@media (prefers-color-scheme: dark) {
+     :root {
+        --gray-50: #1a1a1a;
+        --gray-100: #2d2d2d;
+        --gray-200: #404040;
+        --gray-800: #e0e0e0;
+        --gray-900: #ffffff;
+    }
+}
+
+
+/* Texto grande para accesibilidad */
+
+@media (prefers-reduced-motion: reduce) {
+    .toolbar {
+        animation: none;
+    }
+    .btn::before {
+        display: none;
+    }
+}
+
+
+/* Impresión */
+
+@media print {
+    .toolbar,
+    .view-controls,
+    .customization-panel,
+    .notifications {
+        display: none !important;
+    }
+    .main-content {
+        padding: 0;
+    }
+    .diagram-section {
+        box-shadow: none;
+        border: none;
+    }
+}

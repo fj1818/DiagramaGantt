@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiagramaGanttCustom - Herramienta de Diagramas de Gantt</title>
+    <meta name="description" content="Herramienta web para crear diagramas de Gantt personalizables con múltiples vistas y exportación">
+
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/toolbar.css">
+    <link rel="stylesheet" href="assets/css/modal.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+
+    <!-- Prefetch de librerías para mejor rendimiento -->
+    <link rel="prefetch" href="libs/jsPDF/jspdf.min.js">
+    <link rel="prefetch" href="libs/html2canvas/html2canvas.min.js">
+    <link rel="prefetch" href="libs/FileSaver/FileSaver.min.js">
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen" aria-hidden="true">
+        <div class="loading-spinner"></div>
+        <p>Cargando DiagramaGanttCustom...</p>
+    </div>
+
+    <!-- Main Application Container -->
+    <div id="app" class="app-container" role="main">
+
+        <!-- Barra Superior de Herramientas -->
+        <header class="toolbar" role="banner">
+            <div class="toolbar-section toolbar-left">
+                <h1 class="app-title">
+                    <span class="title-icon">📊</span> DiagramaGanttCustom
+                </h1>
+            </div>
+
+            <div class="toolbar-section toolbar-center">
+                <!-- Botones de Acción Principal -->
+                <div class="action-buttons" role="group" aria-label="Acciones principales">
+                    <button id="btn-add-task" class="btn btn-primary" type="button" aria-label="Agregar nueva tarea o proyecto">
+                        <span class="btn-icon">➕</span>
+                        <span class="btn-text">Agregar Tarea/Proyecto</span>
+                    </button>
+
+                    <button id="btn-save" class="btn btn-secondary" type="button" aria-label="Guardar diagrama actual">
+                        <span class="btn-icon">💾</span>
+                        <span class="btn-text">Guardar Diagrama</span>
+                    </button>
+
+                    <button id="btn-load" class="btn btn-secondary" type="button" aria-label="Cargar diagrama desde archivo">
+                        <span class="btn-icon">📁</span>
+                        <span class="btn-text">Cargar Diagrama</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="toolbar-section toolbar-right">
+                <!-- Panel de Personalización -->
+                <button id="btn-customize" class="btn btn-tertiary customization-toggle" type="button" aria-expanded="false" aria-controls="customization-panel" aria-label="Abrir panel de personalización">
+                    <span class="btn-icon">🎨</span>
+                    <span class="btn-text">Personalización</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+            </div>
+
+            <!-- Input oculto para cargar archivos -->
+            <input type="file" id="file-input" accept=".json" style="display: none;" aria-label="Seleccionar archivo JSON para cargar">
+        </header>
+
+        <!-- Panel de Personalización (Oculto por defecto) -->
+        <aside id="customization-panel" class="customization-panel" role="complementary" aria-labelledby="customization-title" hidden>
+            <div class="panel-header">
+                <h2 id="customization-title" class="panel-title">🎨 Personalización</h2>
+                <button id="btn-close-panel" class="btn-close" type="button" aria-label="Cerrar panel de personalización">×</button>
+            </div>
+            <div class="panel-content">
+                <!-- El contenido se generará dinámicamente -->
+                <p class="panel-placeholder">Panel de personalización cargando...</p>
+            </div>
+        </aside>
+
+        <!-- Botones de Vista -->
+        <nav class="view-controls" role="navigation" aria-label="Controles de vista del diagrama">
+            <div class="view-buttons" role="group" aria-label="Seleccionar tipo de vista">
+                <button id="btn-view-daily" class="btn-view" type="button" aria-pressed="false" data-view="daily">
+                    📅 Diaria
+                </button>
+                <button id="btn-view-weekly" class="btn-view active" type="button" aria-pressed="true" data-view="weekly">
+                    📆 Semanal
+                </button>
+                <button id="btn-view-monthly" class="btn-view" type="button" aria-pressed="false" data-view="monthly">
+                    🗓️ Mensual
+                </button>
+                <button id="btn-view-sprint" class="btn-view" type="button" aria-pressed="false" data-view="sprint">
+                    🚀 Sprint
+                </button>
+            </div>
+        </nav>
+
+        <!-- Área Principal del Contenido -->
+        <main class="main-content">
+            <!-- Tabla de Tareas -->
+            <section class="task-section" aria-labelledby="task-title">
+                <h2 id="task-title" class="section-title">Gestión de Tareas</h2>
+                <div id="task-table-container" class="table-container">
+                    <!-- La tabla se generará dinámicamente -->
+                </div>
+            </section>
+
+            <!-- Canvas del Diagrama -->
+            <section class="diagram-section" aria-labelledby="diagram-title">
+                <h2 id="diagram-title" class="section-title">Diagrama de Gantt</h2>
+                <div id="canvas-container" class="canvas-container">
+                    <canvas id="gantt-canvas" class="gantt-canvas" role="img" aria-label="Diagrama de Gantt visual">
+                        Su navegador no soporta Canvas HTML5. Por favor, actualice su navegador.
+                    </canvas>
+                </div>
+            </section>
+        </main>
+
+        <!-- Área de Notificaciones -->
+        <div id="notifications" class="notifications" role="alert" aria-live="polite"></div>
+    </div>
+
+    <!-- Scripts de Librerías Externas -->
+    <script src="libs/jsPDF/jspdf.min.js" defer></script>
+    <script src="libs/html2canvas/html2canvas.min.js" defer></script>
+    <script src="libs/FileSaver/FileSaver.min.js" defer></script>
+
+    <!-- Scripts de la Aplicación -->
+    <script type="module" src="assets/js/app.js"></script>
+</body>
+
+</html>

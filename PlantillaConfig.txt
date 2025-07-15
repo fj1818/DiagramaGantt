@@ -1,0 +1,453 @@
+📄 PlantillaConfig - Archivo de Contexto para Cursor IA
+
+🚩 Información General del Proyecto
+
+Nombre del Proyecto: DiagramaGanttCustom
+
+Objetivo Principal: Crear una herramienta que permita generar diagramas de Gantt personalizables, donde pueda alternar entre vista semanal, diaria, mensual y de sprint para el seguimiento y actualización de proyectos y tareas. Incluye capacidades de exportación en PDF/JPG/PNG y exportación/importación de configuración en JSON para reutilización futura, con un panel completo de personalización de elementos del diagrama.
+
+📌 Reglas del Negocio y Requerimientos Funcionales
+
+**RF1 - Sistema de Vistas del Diagrama:**
+- Vista Diaria: Encabezados con meses/año, debajo días numerados
+- Vista Semanal: Encabezados con meses/año, debajo semanas numeradas  
+- Vista Mensual: Solo meses con año
+- Vista de Sprint: Solicitar fecha de inicio para calcular períodos de sprint
+- Transformación automática al presionar botón de vista correspondiente
+- Rango temporal desde tarea más antigua a más reciente
+
+**RF2 - Gestión de Proyectos y Tareas:**
+- Soporte para múltiples proyectos simultáneos
+- No requiere dependencias entre tareas
+- No hay sistema de subtareas
+- Tareas representadas como rectángulos de color
+- Propiedades por tarea: nombre, duración, color
+- Sin límites de cantidad de proyectos o tareas
+
+**RF3 - Sistema de Exportación:**
+- Exportación de imágenes (PDF/JPG/PNG) con calidad para impresión
+- Exportación JSON incluyendo datos y configuraciones visuales
+- Importación JSON para cargar proyectos guardados
+- Sin límites de tamaño de archivo
+
+**RF4 - Panel de Personalización:**
+- Colores: tareas individuales, encabezados (meses/días/semanas/sprints), bordes, encabezados de proyecto/tarea, celdas, fondo del diagrama
+- Tipografía: tamaño y tipo de fuente para encabezados, proyectos y tareas
+
+**RF5 - Interfaz de Usuario:**
+- Barra superior con panel de personalización, botones de guardar/cargar y administración
+- Botones de vista siempre visibles
+- Tabla de tareas con columnas: Proyecto, Tarea, Fecha Inicio, Fecha Fin, Color, Acciones
+- Botón para cargar archivos JSON desde computadora
+- Aplicación inicia vacía (sin proyecto de ejemplo)
+- Tareas no redimensionables ni movibles por arrastre
+
+⚙️ Descripción Técnica del Proyecto
+
+Lenguajes/Frameworks/Entornos: Aplicación Web - HTML5, CSS3, Vanilla JavaScript
+
+Bases de Datos: No requiere - Solo archivos JSON locales
+
+Herramientas Adicionales/Librerías: HTML5 Canvas para renderizado, jsPDF para exportación PDF, html2canvas para exportación imágenes, FileSaver.js para descargas
+
+📦 Estructura Modular del Código
+
+Cada módulo debe ser claramente independiente y reutilizable. Documenta aquí cómo segmentarás el código:
+
+**Módulo 1: DataManager**
+Función principal: Gestiona todos los datos de proyectos, tareas y configuraciones
+Entradas: Objetos de proyecto/tarea, archivos JSON, configuraciones
+Salidas: Datos estructurados, validaciones, eventos de cambio
+Dependencias: Ninguna (módulo base)
+
+**Módulo 2: CanvasRenderer**
+Función principal: Renderiza el diagrama de Gantt en HTML5 Canvas
+Entradas: Datos de tareas, configuración visual, tipo de vista
+Salidas: Diagrama dibujado en canvas, coordenadas de elementos
+Dependencias: DataManager
+
+**Módulo 3: ViewManager**
+Función principal: Controla las diferentes vistas (diaria, semanal, mensual, sprint)
+Entradas: Tipo de vista, datos de tareas, fecha de inicio de sprint
+Salidas: Configuración de escala temporal, encabezados calculados
+Dependencias: DataManager
+
+**Módulo 4: StyleManager**
+Función principal: Gestiona todas las configuraciones de personalización visual
+Entradas: Configuraciones de color, fuente, tamaños
+Salidas: Estilos aplicados, CSS dinámico
+Dependencias: Ninguna
+
+**Módulo 5: ExportManager**
+Función principal: Maneja todas las exportaciones (PDF, imágenes, JSON)
+Entradas: Canvas renderizado, datos de proyecto, configuraciones
+Salidas: Archivos descargados (PDF/JPG/PNG/JSON)
+Dependencias: jsPDF, html2canvas, FileSaver.js, DataManager
+
+**Módulo 6: UIController**
+Función principal: Controla la interfaz de usuario y tabla de tareas
+Entradas: Eventos de usuario, datos para mostrar
+Salidas: Actualizaciones de DOM, validaciones de formulario
+Dependencias: DataManager, StyleManager, ViewManager
+
+📝 Ejemplos Claros de Entradas y Salidas Esperadas
+
+**Entrada de Tarea Individual:**
+```json
+{
+  "proyecto": "Desarrollo Web",
+  "tarea": "Diseño UI/UX", 
+  "fechaInicio": "2024-01-15",
+  "fechaFin": "2024-01-25",
+  "color": "#4CAF50"
+}
+```
+
+**Salida Esperada:** Rectángulo verde en el diagrama desde el 15 hasta el 25 de enero con texto "Diseño UI/UX"
+
+**Entrada de Configuración Visual:**
+```json
+{
+  "colores": {
+    "fondoDiagrama": "#FFFFFF",
+    "encabezados": "#2196F3", 
+    "bordes": "#E0E0E0",
+    "celdas": "#F5F5F5"
+  },
+  "fuentes": {
+    "encabezados": {"tipo": "Arial", "tamaño": 14},
+    "tareas": {"tipo": "Arial", "tamaño": 12}
+  }
+}
+```
+
+**Salida Esperada:** Diagrama con fondo blanco, encabezados azules, bordes grises claros y fuentes Arial
+
+🚧 Limitaciones y Consideraciones Técnicas
+
+**Limitaciones Técnicas:**
+- Aplicación de una sola página (Single Page Application)
+- Sin persistencia de datos permanente (requiere guardar JSON manualmente)
+- Requiere navegadores con soporte completo de HTML5 Canvas
+- Diseño responsivo para adaptarse a diferentes tamaños de pantalla
+
+**Consideraciones de Formato:**
+- Fechas deben seguir formato YYYY-MM-DD estrictamente
+- Colores deben especificarse en formato hexadecimal (#RRGGBB)
+- Sin restricciones de navegador específico (compatible con navegadores modernos)
+- Sin límites de rendimiento definidos para cantidad de tareas
+- JSON de exportación sin formato específico requerido
+
+🚨 Registro de Documentación de Errores
+
+Documenta cada error generado usando la siguiente plantilla:
+
+Fecha del Error: [AAAA-MM-DD]
+
+Descripción del Error: [Qué ocurrió exactamente]
+
+Ubicación en Código/Proceso: [En qué módulo o proceso ocurrió]
+
+Posible Causa: [Hipótesis sobre la causa]
+
+Solución Implementada: [Cómo fue corregido]
+
+Acciones Preventivas: [Qué actualizar en este contexto para evitar repetir este error]
+
+---
+
+**REGISTRO DE ERRORES - SESIÓN 2024-12-19**
+
+**Error 1: Cache Persistente Vacío**
+Fecha del Error: 2024-12-19
+Descripción del Error: La aplicación cargaba automáticamente datos vacíos de localStorage al inicializar, manteniendo estado de sesiones anteriores sin contenido real
+Ubicación en Código/Proceso: app.js - setupInitialState() -> loadFromLocalStorage()
+Posible Causa: Carga automática sin validación de contenido útil en datos persistidos
+Solución Implementada: Creada función loadFromLocalStorageIfValid() que solo carga si hay tareas reales con contenido
+Acciones Preventivas: Siempre validar calidad de datos antes de cargar desde persistencia
+
+**Error 2: Scroll del Modal Bloqueado** 
+Fecha del Error: 2024-12-19
+Descripción del Error: La rueda del mouse no permitía hacer scroll dentro del modal de gestión de tareas
+Ubicación en Código/Proceso: modal.css - .modal-body y .task-table-container
+Posible Causa: Conflicto entre overflow hidden en contenedores y falta de configuración de scroll
+Solución Implementada: Configurado overflow-y: auto con scrollbar personalizada y max-height calculada
+Acciones Preventivas: Siempre probar scroll en modales complejos con contenido dinámico
+
+**Error 3: Headers Estáticos**
+Fecha del Error: 2024-12-19
+Descripción del Error: Los nombres de columnas "Proyecto" y "Tarea" eran fijos, sin posibilidad de personalización
+Ubicación en Código/Proceso: TaskTableModal.js - createModalContent()
+Posible Causa: Diseño inicial no consideraba personalización de headers como requerimiento
+Solución Implementada: Headers convertidos a inputs editables con persistencia en estado y archivos
+Acciones Preventivas: Considerar personalización desde fase de diseño inicial
+
+**Error 4: Inicialización de Primera Fila Ambigua**
+Fecha del Error: 2024-12-19  
+Descripción del Error: No quedaba claro si la primera fila se agregaba correctamente en estado completamente vacío
+Ubicación en Código/Proceso: TaskTableModal.js - addTask()
+Posible Causa: Falta de logging específico para diferenciar primera tarea vs tareas subsiguientes
+Solución Implementada: Agregado logging diferenciado y verificación de estado vacío
+Acciones Preventivas: Siempre agregar logging detallado para flujos críticos de inicialización
+
+**Error 5: Gestión Incorrecta de Estado Temporal vs Persistente**
+Fecha del Error: 2024-12-19
+Descripción del Error: Al abrir modal aparecía vacío pero al agregar elemento cargaba cache completo; cambios temporales no se preservaban entre aperturas del modal durante la misma sesión; preguntaba sobre pérdida de cambios cuando no debería
+Ubicación en Código/Proceso: app.js - estructura de estado global, TaskTableModal.js - detección de cambios
+Posible Causa: Falta de separación entre estado persistente (localStorage) y estado de sesión (temporal)
+Solución Implementada: 
+- Reestructurado estado global con `persistent` y `session` separados
+- Modal ahora usa estado de sesión para mantener cambios temporales
+- Implementada función `hasRealChanges()` que compara vs estado inicial del modal
+- Agregado callback `onTemporaryChange` para sincronizar cambios durante edición
+- Estado de sesión se mantiene hasta que se genere diagrama o se recargue página
+Acciones Preventivas: Separar claramente datos temporales de persistentes desde el diseño inicial; documentar flujos de estado explícitamente
+
+**Error 5.1: Estado de Sesión se Inicializaba con Datos de localStorage**
+Fecha del Error: 2024-12-19
+Descripción del Error: Aunque se corrigió la gestión de estado, al cargar la página y presionar "agregar elemento" seguía cargando localStorage en la sesión
+Ubicación en Código/Proceso: app.js - initializeSessionState() después de loadFromLocalStorageIfValid()
+Posible Causa: initializeSessionState() copiaba automáticamente el estado persistente (que ya tenía datos de localStorage) al estado de sesión
+Solución Implementada:
+- Modificada initializeSessionState() para iniciar SIEMPRE vacío el estado de sesión
+- Creada función syncSessionWithPersistent() para sincronización manual cuando sea necesario
+- Estado de sesión ahora inicia limpio sin importar si hay datos en localStorage
+- Solo se sincroniza cuando se carga un archivo JSON o se necesita explícitamente
+Acciones Preventivas: Distinguir claramente entre inicialización automática vs sincronización manual de estados
+
+📋 Documentación de Implementación Completada
+
+**FASE 1 - ARQUITECTURA Y BARRA SUPERIOR [COMPLETADA]**
+
+Fecha de Implementación: 2024-12-19
+
+**Archivos Creados:**
+- README.md - Documentación completa del proyecto
+- index.html - Estructura HTML semántica con accesibilidad
+- assets/css/main.css - Sistema de design con variables CSS
+- assets/css/toolbar.css - Estilos específicos de barra superior
+- assets/css/responsive.css - Diseño adaptativo móvil-first
+- assets/js/components/Toolbar.js - Componente JavaScript de barra superior
+- assets/js/app.js - Aplicación principal con manejo de estado
+
+**Funcionalidades Implementadas:**
+✅ Barra superior con 4 botones principales (Agregar, Guardar, Cargar, Personalización)
+✅ Botones de vista siempre visibles (Diaria, Semanal, Mensual, Sprint)
+✅ Panel de personalización desplegable
+✅ Sistema de notificaciones
+✅ Manejo de archivos JSON
+✅ Estados de carga en botones
+✅ Navegación por teclado y accesibilidad
+✅ Diseño responsivo completo
+✅ Manejo robusto de errores
+✅ Validación de archivos
+✅ Auto-guardado en localStorage
+
+**Principios UX/UI Aplicados:**
+- Design System consistente con variables CSS
+- Efectos visuales (hover, loading, ripple)
+- Feedback inmediato al usuario
+- Accesibilidad ARIA completa
+- Navegación por teclado
+- Estados de error amigables
+- Diseño móvil-first responsivo
+- Animaciones suaves con respeto a prefers-reduced-motion
+
+**Manejo de Errores Implementado:**
+- Validación de soporte del navegador
+- Try-catch en todas las operaciones async
+- Manejo de errores críticos con UI de recuperación
+- Validación de archivos (tipo y tamaño)
+- Validación de estructura de datos JSON
+- Logging detallado para debugging
+
+**Mejoras Técnicas Identificadas:**
+1. Implementar sistema de notificaciones más robusto
+2. Agregar testing unitario para cada componente
+3. Optimizar rendimiento con lazy loading
+4. Implementar sistema de themes más avanzado
+5. Agregar soporte para múltiples idiomas
+
+**FASE 2 - MODAL DE GESTIÓN DE TAREAS [COMPLETADA]**
+
+Fecha de Implementación: 2024-12-19
+
+**Archivos Creados:**
+- assets/css/modal.css - Sistema completo de modales con accesibilidad
+- assets/js/components/Modal.js - Componente modal reutilizable
+- assets/js/components/TaskTableModal.js - Modal especializado para gestión de tareas
+
+**Funcionalidades Implementadas:**
+✅ Modal responsive con focus trap y accesibilidad completa
+✅ Tabla CRUD de tareas con columnas: Proyecto, Tarea, Fecha Inicio, Fecha Fin, Color, Acciones
+✅ Botón "Agregar Elemento" que inserta nuevas filas dinámicamente
+✅ Selector de color dual (picker visual + input hexadecimal)
+✅ Validación en tiempo real de todos los campos
+✅ Botón eliminar por fila con confirmación
+✅ Botones "Cancelar" y "Generar Diagrama" en footer
+✅ Estado vacío cuando no hay tareas
+✅ Integración completa con Toolbar existente
+✅ Persistencia en localStorage
+
+**Validaciones Implementadas:**
+- Campos requeridos: Proyecto y Tarea no pueden estar vacíos
+- Fechas: Fecha fin debe ser posterior a fecha inicio
+- Colores: Formato hexadecimal válido (#RRGGBB)
+- Confirmación al eliminar tareas con contenido
+- Confirmación al cancelar con cambios sin guardar
+
+**UX/UI Avanzado:**
+- Modal adaptativo (desktop, tablet, móvil)
+- Animaciones suaves de apertura/cierre
+- Focus automático en elementos apropiados
+- Preview visual del color en tiempo real
+- Estados hover/active en todos los elementos interactivos
+- Navegación por teclado completa (Tab, Escape, Enter)
+- Feedback visual para errores de validación
+
+**Integración con Arquitectura:**
+- Comunicación bidireccional con app.js
+- Callbacks para todos los eventos de CRUD
+- Estado global sincronizado
+- Reutilización del Design System establecido
+- Manejo de errores consistente
+
+**FASE 2.1 - MEJORAS Y CORRECCIONES CRÍTICAS [COMPLETADA]**
+
+Fecha de Implementación: 2024-12-19
+
+**Problemas Resueltos:**
+✅ **Cache Persistente**: Modificada lógica de inicialización para evitar cargar datos vacíos de sesiones anteriores
+✅ **Scroll del Modal**: Corregidos estilos CSS para permitir scroll con rueda del mouse en el modal
+✅ **Encabezados Editables**: Implementados headers "Proyecto" y "Tarea" completamente editables con persistencia
+✅ **Primera Fila Vacía**: Verificado funcionamiento correcto al agregar primera tarea en estado limpio
+
+**Funcionalidades Mejoradas:**
+- **Cache Inteligente**: loadFromLocalStorageIfValid() solo carga datos si hay tareas reales con contenido
+- **Headers Dinámicos**: Los nombres de columnas "Proyecto" y "Tarea" son editables in-situ
+- **Scroll Optimizado**: Scroll suave con scrollbar personalizada en todos los navegadores
+- **Estado Limpio**: Aplicación inicia vacía en primera carga, sin residuos de cache
+
+**Arquitectura Actualizada:**
+- Estado global incluye `this.state.headers = { proyecto: 'Proyecto', tarea: 'Tarea' }`
+- Función `getCompleteData()` retorna tareas + headers para export/import completo
+- Callbacks mejorados: `onGenerate(tasks, headers)` incluye headers personalizados
+- Persistencia completa: headers se guardan/cargan en localStorage y archivos JSON
+
+**Manejo de Errores Mejorado:**
+- Validación de localStorage corrupto con limpieza automática
+- Detección de primera tarea vs tareas subsiguientes
+- Restauración automática de headers a valores por defecto si quedan vacíos
+
+**UX/UI Avanzado:**
+- Headers editables con hover y focus states
+- Scroll visual mejorado con indicadores
+- Log detallado de primera tarea vs tareas adicionales
+- Feedback visual al editar headers en tiempo real
+
+**FASE 2.2 - CORRECIÓN CRÍTICA DE GESTIÓN DE ESTADO [COMPLETADA]**
+
+Fecha de Implementación: 2024-12-19
+
+**Problema Principal Resuelto:**
+❌ **Antes**: Modal cargaba vacío pero al agregar elemento traía todo de localStorage
+❌ **Antes**: Cambios temporales se perdían al cerrar/reabrir modal en la misma sesión  
+❌ **Antes**: Preguntaba sobre pérdida de cambios innecesariamente
+✅ **Ahora**: Gestión correcta de estado temporal vs persistente
+
+**Arquitectura de Estado Reestructurada:**
+```javascript
+this.state = {
+    persistent: {    // Se guarda en localStorage, persiste entre recargas
+        tasks: [],
+        headers: {},
+        settings: {},
+        view: {}
+    },
+    session: {       // Estado temporal durante la sesión
+        tasks: [],
+        headers: {},
+        hasChanges: false
+    }
+}
+```
+
+**Funcionalidades Implementadas:**
+✅ **Separación de Estados**: Persistente (localStorage) vs Sesión (temporal)
+✅ **Modal Inteligente**: Abre con estado de sesión, mantiene cambios temporales
+✅ **Detección Mejorada**: `hasRealChanges()` compara vs estado inicial del modal
+✅ **Callbacks Temporales**: `onTemporaryChange` sincroniza cambios en tiempo real
+✅ **Flujo Correcto**: 
+- Abrir modal → carga estado de sesión
+- Editar → cambios van a estado de sesión automáticamente
+- Cancelar → cambios se mantienen para próxima apertura
+- Generar → cambios se guardan en estado persistente y localStorage
+- Recargar página → solo estado persistente se restaura
+
+**Mejoras UX/UI:**
+- No pregunta sobre pérdida de cambios si no hay cambios reales
+- Cambios temporales persisten durante toda la sesión
+- Estado inicial del modal se preserva para comparación
+- Logging detallado del flujo de estados para debugging
+
+**Testing Implementado:**
+- Archivo `test-session-state.html` para verificar flujo completo
+- Pruebas de todos los escenarios: inicio, agregar, cancelar, reabrir, generar
+- Verificación visual del estado persistente vs sesión en tiempo real
+
+📚 Prompt Base Automático para Cursor IA
+
+Al consultar esta PlantillaConfig, actúa como un programador full stack y:
+
+**Análisis y Planificación:**
+- Divide tareas grandes en subtareas modulares claras
+- Revisa siempre las reglas, limitaciones y ejemplos antes de proceder
+- Consulta la documentación de implementación completada para mantener consistencia
+- Identifica dependencias entre módulos según la arquitectura definida
+
+**Desarrollo y Código:**
+- Implementa manejo robusto de errores con try-catch y validaciones
+- Aplica principios de UX/UI en cada componente (accesibilidad, responsive, feedback)
+- Usa el Design System establecido (variables CSS, nomenclatura consistente)
+- Implementa logging detallado para debugging
+- Valida todas las entradas de usuario y archivos
+- Considera navegación por teclado y ARIA labels
+
+**Testing y Calidad:**
+- Incluye validaciones de soporte del navegador
+- Implementa estados de carga y feedback visual
+- Maneja errores críticos con UI de recuperación
+- Documenta funciones complejas con JSDoc
+- Considera casos edge y validaciones de datos
+
+**Comunicación:**
+- Explica cómo abordarás cada módulo según esta plantilla
+- Documenta cualquier ambigüedad formulando preguntas específicas
+- Actualiza la PlantillaConfig con aprendizajes nuevos
+- Espera confirmación si hay múltiples enfoques válidos
+
+**Arquitectura Modular:**
+- Mantén separación clara entre componentes (Toolbar, DataManager, etc.)
+- Usa ES6+ modules y async/await consistentemente
+- Implementa comunicación entre componentes vía callbacks
+- Preserva el estado global en app.js
+
+**Próximas Fases Identificadas:**
+1. ✅ **FASE 1**: Arquitectura y barra superior [COMPLETADA]
+2. ✅ **FASE 2**: Modal de gestión de tareas [COMPLETADA] 
+   ✅ **FASE 2.1**: Mejoras y correcciones críticas [COMPLETADA]
+   ✅ **FASE 2.2**: Corrección crítica de gestión de estado [COMPLETADA]
+3. **FASE 3**: Canvas renderer con diagramas Gantt reales y múltiples vistas [PRÓXIMA]
+4. **FASE 4**: Tabla de resumen de tareas fuera del modal
+5. **FASE 5**: Sistema de personalización funcional avanzado
+6. **FASE 6**: Exportación PDF/imágenes con librerías externas
+7. **FASE 7**: Testing y optimización final
+
+**Preparado para FASE 3:**
+- ✅ Estado global con gestión de persistencia vs sesión completamente funcional
+- ✅ Modal de gestión sin bugs críticos y con gestión de estado temporal robusta
+- ✅ Arquitectura modular lista para Canvas renderer
+- ✅ Datos de entrada validados y estructurados correctamente  
+- ✅ Sistema de vistas (diaria, semanal, mensual, sprint) listo para implementar
+- ✅ Flujo de datos temporal vs persistente completamente resuelto
+- ✅ Testing implementado para verificar correcto funcionamiento

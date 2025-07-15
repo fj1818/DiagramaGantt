@@ -1,0 +1,441 @@
+/* =====================================================
+   Toolbar - Estilos de Barra Superior
+   ===================================================== */
+
+
+/* Barra Superior Principal */
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, white 0%, var(--gray-50) 100%);
+    border-bottom: var(--border-width) solid var(--gray-200);
+    padding: var(--spacing-md) var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    min-height: 64px;
+}
+
+
+/* Secciones de la Toolbar */
+
+.toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.toolbar-left {
+    flex: 0 0 auto;
+}
+
+.toolbar-center {
+    flex: 1;
+    justify-content: center;
+}
+
+.toolbar-right {
+    flex: 0 0 auto;
+}
+
+
+/* Título de la Aplicación */
+
+.app-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--gray-800);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin: 0;
+}
+
+.title-icon {
+    font-size: var(--font-size-3xl);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+
+/* Grupo de Botones de Acción */
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs);
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+
+/* Sistema de Botones */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    line-height: 1.5;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* Efecto de ripple en botones */
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width var(--transition-fast), height var(--transition-fast);
+}
+
+.btn:active::before {
+    width: 120%;
+    height: 120%;
+}
+
+
+/* Variantes de Botones */
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+    background: var(--primary-active);
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:hover {
+    background: var(--secondary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-tertiary {
+    background: white;
+    color: var(--gray-700);
+    border: var(--border-width) solid var(--gray-300);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-tertiary:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-400);
+    color: var(--gray-800);
+    transform: translateY(-1px);
+}
+
+
+/* Iconos y Texto en Botones */
+
+.btn-icon {
+    font-size: var(--font-size-lg);
+    line-height: 1;
+}
+
+.btn-text {
+    font-weight: 500;
+}
+
+
+/* Estados de Botones */
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.btn.loading {
+    color: transparent;
+}
+
+.btn.loading::after {
+    color: currentColor;
+}
+
+
+/* Botón de Personalización */
+
+.customization-toggle {
+    position: relative;
+}
+
+.dropdown-arrow {
+    font-size: var(--font-size-xs);
+    transition: transform var(--transition-fast);
+}
+
+.customization-toggle[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+
+/* Panel de Personalización */
+
+.customization-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 320px;
+    max-height: 400px;
+    background: white;
+    border: var(--border-width) solid var(--gray-200);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-dropdown);
+    overflow: hidden;
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-normal);
+}
+
+.customization-panel:not([hidden]) {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    background: var(--gray-50);
+    border-bottom: var(--border-width) solid var(--gray-200);
+}
+
+.panel-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: var(--font-size-xl);
+    color: var(--gray-500);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+}
+
+.btn-close:hover {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+.panel-content {
+    padding: var(--spacing-md);
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.panel-placeholder {
+    color: var(--gray-500);
+    font-style: italic;
+    text-align: center;
+    margin: var(--spacing-xl) 0;
+}
+
+
+/* Controles de Vista */
+
+.view-controls {
+    background: white;
+    border-bottom: var(--border-width) solid var(--gray-200);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.view-buttons {
+    display: flex;
+    gap: 0;
+    background: var(--gray-100);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xs);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.view-buttons::-webkit-scrollbar {
+    display: none;
+}
+
+.btn-view {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    background: transparent;
+    color: var(--gray-600);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    flex: 1;
+    min-width: fit-content;
+}
+
+.btn-view:hover {
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--gray-800);
+}
+
+.btn-view.active {
+    background: white;
+    color: var(--primary-color);
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+}
+
+
+/* Indicador Visual de Estado Activo */
+
+.btn-view.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 2px;
+    background: var(--primary-color);
+    border-radius: 1px;
+}
+
+
+/* Animaciones de Entrada */
+
+@keyframes slideInDown {
+    from {
+        transform: translate3d(0, -100%, 0);
+        visibility: visible;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.toolbar {
+    animation: slideInDown 0.5s ease-out;
+}
+
+
+/* Estados de Carga en Botones */
+
+.btn.loading .btn-text {
+    opacity: 0;
+}
+
+.btn.loading .btn-icon {
+    animation: spin 1s linear infinite;
+}
+
+
+/* Tooltip para botones */
+
+.btn[data-tooltip] {
+    position: relative;
+}
+
+.btn[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gray-900);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+    z-index: var(--z-dropdown);
+    opacity: 0;
+    animation: fadeIn 0.2s ease-out 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* Mejoras de Accesibilidad */
+
+@media (prefers-reduced-motion: reduce) {
+    .btn::before,
+    .dropdown-arrow,
+    .customization-panel {
+        transition: none;
+    }
+    .toolbar {
+        animation: none;
+    }
+}
+
+
+/* Estados de Alto Contraste */
+
+@media (prefers-contrast: high) {
+    .btn {
+        border: 2px solid currentColor;
+    }
+    .toolbar {
+        border-bottom-width: 2px;
+    }
+}
