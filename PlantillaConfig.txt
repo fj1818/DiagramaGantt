@@ -23,12 +23,17 @@ Objetivo Principal: Crear una herramienta que permita generar diagramas de Gantt
 - Tareas representadas como rectángulos de color
 - Propiedades por tarea: nombre, duración, color
 - Sin límites de cantidad de proyectos o tareas
+- **[NUEVO]** Headers de columnas editables (Proyecto/Tarea personalizables)
+- **[NUEVO]** Validación en tiempo real de campos requeridos
+- **[NUEVO]** Sistema de colores dual: picker visual + input hexadecimal
 
 **RF3 - Sistema de Exportación:**
 - Exportación de imágenes (PDF/JPG/PNG) con calidad para impresión
 - Exportación JSON incluyendo datos y configuraciones visuales
 - Importación JSON para cargar proyectos guardados
 - Sin límites de tamaño de archivo
+- **[NUEVO]** Validación de estructura JSON en importación
+- **[NUEVO]** Headers personalizados incluidos en exportación/importación
 
 **RF4 - Panel de Personalización:**
 - Colores: tareas individuales, encabezados (meses/días/semanas/sprints), bordes, encabezados de proyecto/tarea, celdas, fondo del diagrama
@@ -41,14 +46,30 @@ Objetivo Principal: Crear una herramienta que permita generar diagramas de Gantt
 - Botón para cargar archivos JSON desde computadora
 - Aplicación inicia vacía (sin proyecto de ejemplo)
 - Tareas no redimensionables ni movibles por arrastre
+- **[NUEVO]** Modal responsivo con scroll optimizado para contenido dinámico
+- **[NUEVO]** Sistema de notificaciones con diferentes tipos (éxito, error, advertencia, info)
+- **[NUEVO]** Focus trap completo para accesibilidad en modales
+
+**RF6 - [NUEVO] Gestión de Estado Dual:**
+- **Estado Persistente**: Datos guardados en localStorage que persisten entre recargas
+- **Estado de Sesión**: Cambios temporales durante edición que se mantienen hasta generar diagrama
+- Los cambios en modal se guardan en estado de sesión hasta confirmación
+- Estado de sesión permite cancelar y reabrir sin perder progreso durante la misma sesión
 
 ⚙️ Descripción Técnica del Proyecto
 
-Lenguajes/Frameworks/Entornos: Aplicación Web - HTML5, CSS3, Vanilla JavaScript
+Lenguajes/Frameworks/Entornos: Aplicación Web - HTML5, CSS3, Vanilla JavaScript ES6+
 
-Bases de Datos: No requiere - Solo archivos JSON locales
+Bases de Datos: No requiere - Solo archivos JSON locales con localStorage para persistencia automática
 
 Herramientas Adicionales/Librerías: HTML5 Canvas para renderizado, jsPDF para exportación PDF, html2canvas para exportación imágenes, FileSaver.js para descargas
+
+**[NUEVO] Arquitectura de Componentes Implementada:**
+- **Sistema Modular**: Componentes independientes con comunicación vía callbacks
+- **ES6 Modules**: Importación/exportación nativa de módulos
+- **Design System**: Variables CSS centralizadas con sistema de tokens
+- **Component Lifecycle**: Inicialización, configuración, destrucción controlada
+- **Event-Driven Architecture**: Comunicación asíncrona entre componentes
 
 📦 Estructura Modular del Código
 
@@ -90,11 +111,38 @@ Entradas: Eventos de usuario, datos para mostrar
 Salidas: Actualizaciones de DOM, validaciones de formulario
 Dependencias: DataManager, StyleManager, ViewManager
 
+**[NUEVOS] Componentes UI Implementados:**
+
+**Componente 7: Toolbar**
+Función principal: Maneja barra superior con botones principales y navegación
+Entradas: Callbacks de aplicación principal, configuración de estado
+Salidas: Eventos de usuario (guardar, cargar, vista, personalización)
+Dependencias: Sistema de archivos, validaciones
+Estado: currentView, hasUnsavedChanges, isLoading, isCustomizationOpen
+Comunicación: Callbacks síncronos y asíncronos con app.js
+
+**Componente 8: Modal (Base)**
+Función principal: Sistema modal reutilizable con accesibilidad completa
+Entradas: Configuración (título, tamaño, callbacks), contenido dinámico
+Salidas: Eventos de apertura/cierre, confirmación/cancelación
+Dependencias: Ninguna (componente base)
+Estado: isOpen, isLoading, focusedElementBeforeModal, focusableElements
+Características: Focus trap, scroll optimizado, responsive, keyboard navigation
+
+**Componente 9: TaskTableModal**
+Función principal: Modal especializado para gestión CRUD de tareas
+Entradas: Tareas iniciales, headers personalizados, callbacks de eventos
+Salidas: Tareas validadas, headers editados, eventos de cambio temporal
+Dependencias: Modal (base)
+Estado: tasks, headers, validationErrors, isModified, initialState
+Validaciones: Campos requeridos, formato de fechas, colores hexadecimales
+
 📝 Ejemplos Claros de Entradas y Salidas Esperadas
 
 **Entrada de Tarea Individual:**
 ```json
 {
+  "id": "task_1642345678901_abc123def",
   "proyecto": "Desarrollo Web",
   "tarea": "Diseño UI/UX", 
   "fechaInicio": "2024-01-15",
@@ -104,6 +152,18 @@ Dependencias: DataManager, StyleManager, ViewManager
 ```
 
 **Salida Esperada:** Rectángulo verde en el diagrama desde el 15 hasta el 25 de enero con texto "Diseño UI/UX"
+
+**[NUEVO] Entrada de Headers Personalizados:**
+```json
+{
+  "headers": {
+    "proyecto": "Módulo",
+    "tarea": "Actividad"
+  }
+}
+```
+
+**Salida Esperada:** Columnas de tabla con nombres "Módulo" y "Actividad" en lugar de "Proyecto" y "Tarea"
 
 **Entrada de Configuración Visual:**
 ```json
@@ -123,6 +183,23 @@ Dependencias: DataManager, StyleManager, ViewManager
 
 **Salida Esperada:** Diagrama con fondo blanco, encabezados azules, bordes grises claros y fuentes Arial
 
+**[NUEVO] Ejemplo de Estado Dual:**
+```javascript
+// Estado Persistente (localStorage)
+persistent: {
+  tasks: [...], // Tareas confirmadas/guardadas
+  headers: {...}, // Headers guardados
+  settings: {...} // Configuraciones guardadas
+}
+
+// Estado de Sesión (temporal)
+session: {
+  tasks: [...], // Tareas en edición
+  headers: {...}, // Headers temporales
+  hasChanges: true // Indicador de cambios sin guardar
+}
+```
+
 🚧 Limitaciones y Consideraciones Técnicas
 
 **Limitaciones Técnicas:**
@@ -130,6 +207,26 @@ Dependencias: DataManager, StyleManager, ViewManager
 - Sin persistencia de datos permanente (requiere guardar JSON manualmente)
 - Requiere navegadores con soporte completo de HTML5 Canvas
 - Diseño responsivo para adaptarse a diferentes tamaños de pantalla
+- **[NUEVO]** Dependencias de librerías externas (jsPDF, html2canvas, FileSaver.js)
+- **[NUEVO]** Limitaciones de memoria en navegadores para canvas muy grandes
+- **[NUEVO]** Rendimiento degradado con más de 1000 tareas simultáneas
+- **[NUEVO]** Compatibilidad limitada con Internet Explorer (requiere Edge/Chrome/Firefox modernos)
+
+**[NUEVAS] Consideraciones de Arquitectura:**
+- **Gestión de Memoria**: Componentes deben implementar método destroy() para cleanup
+- **Event Listeners**: Todos los listeners deben removerse en destrucción de componentes
+- **Comunicación Asíncrona**: Callbacks pueden ser síncronos o async, manejar ambos casos
+- **Estado Temporal**: Separar claramente datos temporales de persistentes desde diseño inicial
+- **Focus Management**: Focus trap requiere recálculo cuando contenido del modal cambia dinámicamente
+- **Scroll Performance**: Modal body necesita configuración específica para scroll fluido en todos los navegadores
+
+**[NUEVAS] Consideraciones de UX/UI:**
+- **Accesibilidad ARIA**: Todos los componentes interactivos requieren labels y roles apropiados
+- **Keyboard Navigation**: Tab order debe ser lógico y permitir navegación completa sin mouse
+- **Visual Feedback**: Estados hover, focus, loading, error deben ser claramente diferenciables
+- **Responsive Design**: Breakpoints en 768px (móvil) y 992px (tablet) con comportamiento específico
+- **Color Accessibility**: Contraste mínimo 4.5:1 para texto normal, 3:1 para texto grande
+- **Animation Performance**: Respetar prefers-reduced-motion para usuarios con sensibilidades
 
 **Consideraciones de Formato:**
 - Fechas deben seguir formato YYYY-MM-DD estrictamente
@@ -137,6 +234,9 @@ Dependencias: DataManager, StyleManager, ViewManager
 - Sin restricciones de navegador específico (compatible con navegadores modernos)
 - Sin límites de rendimiento definidos para cantidad de tareas
 - JSON de exportación sin formato específico requerido
+- **[NUEVO]** IDs de tareas deben ser únicos usando timestamp + random
+- **[NUEVO]** Headers no pueden quedar completamente vacíos (restaurar a defaults)
+- **[NUEVO]** Validación de JSON: estructura de versión, compatibilidad, campos requeridos
 
 🚨 Registro de Documentación de Errores
 
@@ -215,6 +315,22 @@ Solución Implementada:
 - Solo se sincroniza cuando se carga un archivo JSON o se necesita explícitamente
 Acciones Preventivas: Distinguir claramente entre inicialización automática vs sincronización manual de estados
 
+**[NUEVO] Error 6: Focus Trap Desincronizado con Contenido Dinámico**
+Fecha del Error: 2024-12-19
+Descripción del Error: El focus trap del modal perdía elementos enfocables cuando se agregaban/eliminaban filas dinámicamente
+Ubicación en Código/Proceso: Modal.js - setupFocusTrap(), TaskTableModal.js - renderTasks()
+Posible Causa: setupFocusTrap() se ejecutaba solo al abrir modal, no se recalculaba con cambios de contenido
+Solución Implementada: Llamar setupFocusTrap() después de cualquier cambio dinámico en renderTasks()
+Acciones Preventivas: Siempre recalcular focus trap cuando cambie contenido enfocable en modales
+
+**[NUEVO] Error 7: Scroll Events Conflictivos en Modal**
+Fecha del Error: 2024-12-19
+Descripción del Error: Eventos de scroll se propagaban incorrectamente entre modal-overlay y modal-body causando comportamiento errático
+Ubicación en Código/Proceso: Modal.js - attachEventListeners(), setupModalBodyScroll()
+Posible Causa: Múltiples listeners de scroll sin stopPropagation() apropiado
+Solución Implementada: Configuración específica de scroll para modal-body con stopPropagation() y passive events
+Acciones Preventivas: Documentar jerarquía de eventos de scroll en componentes complejos
+
 📋 Documentación de Implementación Completada
 
 **FASE 1 - ARQUITECTURA Y BARRA SUPERIOR [COMPLETADA]**
@@ -251,7 +367,7 @@ Fecha de Implementación: 2024-12-19
 - Navegación por teclado
 - Estados de error amigables
 - Diseño móvil-first responsivo
-- Animaciones suaves con respeto a prefers-reduced-motion
+- Animaciones suaves con respecto a prefers-reduced-motion
 
 **Manejo de Errores Implementado:**
 - Validación de soporte del navegador
@@ -289,12 +405,22 @@ Fecha de Implementación: 2024-12-19
 ✅ Integración completa con Toolbar existente
 ✅ Persistencia en localStorage
 
+**[NUEVAS] Funcionalidades Avanzadas Implementadas:**
+✅ **Headers Editables**: Nombres de columnas "Proyecto" y "Tarea" completamente personalizables
+✅ **Estado Dual**: Gestión separada de estado persistente (localStorage) vs temporal (sesión)
+✅ **Scroll Optimizado**: Scroll fluido con rueda del mouse en modal con contenido dinámico
+✅ **Focus Trap Dinámico**: Recalculación automática de elementos enfocables con cambios de contenido
+✅ **Validación Inteligente**: Detección de cambios reales vs estado inicial para confirmaciones
+✅ **Callbacks Temporales**: Sincronización de cambios sin guardar entre apertura/cierre de modal
+
 **Validaciones Implementadas:**
 - Campos requeridos: Proyecto y Tarea no pueden estar vacíos
 - Fechas: Fecha fin debe ser posterior a fecha inicio
 - Colores: Formato hexadecimal válido (#RRGGBB)
 - Confirmación al eliminar tareas con contenido
 - Confirmación al cancelar con cambios sin guardar
+- **[NUEVO]** Headers no pueden quedar completamente vacíos (auto-restauración)
+- **[NUEVO]** Validación de unicidad de IDs de tareas
 
 **UX/UI Avanzado:**
 - Modal adaptativo (desktop, tablet, móvil)
@@ -304,6 +430,9 @@ Fecha de Implementación: 2024-12-19
 - Estados hover/active en todos los elementos interactivos
 - Navegación por teclado completa (Tab, Escape, Enter)
 - Feedback visual para errores de validación
+- **[NUEVO]** Scrollbar personalizada compatible con todos los navegadores
+- **[NUEVO]** Headers editables con estados hover y focus visuales
+- **[NUEVO]** Indicadores visuales de carga y cambios sin guardar
 
 **Integración con Arquitectura:**
 - Comunicación bidireccional con app.js
@@ -311,6 +440,8 @@ Fecha de Implementación: 2024-12-19
 - Estado global sincronizado
 - Reutilización del Design System establecido
 - Manejo de errores consistente
+- **[NUEVO]** Separación clara entre estado temporal y persistente
+- **[NUEVO]** Gestión de ciclo de vida de componentes con cleanup apropiado
 
 **FASE 2.1 - MEJORAS Y CORRECCIONES CRÍTICAS [COMPLETADA]**
 
@@ -395,6 +526,26 @@ this.state = {
 - Pruebas de todos los escenarios: inicio, agregar, cancelar, reabrir, generar
 - Verificación visual del estado persistente vs sesión en tiempo real
 
+**[NUEVAS] Consideraciones de Implementación Identificadas:**
+
+**Gestión de Componentes:**
+- **Lifecycle Management**: Todos los componentes implementan init(), destroy() y getState()
+- **Memory Cleanup**: Event listeners se remueven en destrucción para evitar memory leaks
+- **Error Boundaries**: Try-catch en todos los métodos públicos de componentes
+- **State Synchronization**: Callbacks síncronos para updates de UI, async para operaciones de archivo
+
+**Performance y Escalabilidad:**
+- **DOM Manipulation**: Minimizar reflows usando DocumentFragment para operaciones batch
+- **Event Delegation**: Usar delegación de eventos para elementos dinámicos en lugar de múltiples listeners
+- **Throttling**: Implementar throttling en eventos de alta frecuencia (scroll, resize, input)
+- **Lazy Loading**: Inicializar componentes solo cuando se necesiten
+
+**Accesibilidad Avanzada:**
+- **Screen Readers**: Todos los cambios dinámicos usan aria-live regions apropiadas
+- **Keyboard Navigation**: Tab order lógico con skip links para navegación rápida
+- **Color Contrast**: Variables CSS calculadas automáticamente para cumplir WCAG 2.1 AA
+- **Motion Sensitivity**: Respeto completo a prefers-reduced-motion en todas las animaciones
+
 📚 Prompt Base Automático para Cursor IA
 
 Al consultar esta PlantillaConfig, actúa como un programador full stack y:
@@ -404,6 +555,8 @@ Al consultar esta PlantillaConfig, actúa como un programador full stack y:
 - Revisa siempre las reglas, limitaciones y ejemplos antes de proceder
 - Consulta la documentación de implementación completada para mantener consistencia
 - Identifica dependencias entre módulos según la arquitectura definida
+- **[NUEVO]** Considera estado dual (persistente/sesión) en toda nueva funcionalidad
+- **[NUEVO]** Planifica cleanup de memoria y event listeners desde el diseño inicial
 
 **Desarrollo y Código:**
 - Implementa manejo robusto de errores con try-catch y validaciones
@@ -412,6 +565,9 @@ Al consultar esta PlantillaConfig, actúa como un programador full stack y:
 - Implementa logging detallado para debugging
 - Valida todas las entradas de usuario y archivos
 - Considera navegación por teclado y ARIA labels
+- **[NUEVO]** Implementa destroy() method en todos los componentes
+- **[NUEVO]** Usa callbacks temporales para cambios que no deben persistir inmediatamente
+- **[NUEVO]** Implementa focus trap dinámico para contenido que cambia
 
 **Testing y Calidad:**
 - Incluye validaciones de soporte del navegador
@@ -419,18 +575,26 @@ Al consultar esta PlantillaConfig, actúa como un programador full stack y:
 - Maneja errores críticos con UI de recuperación
 - Documenta funciones complejas con JSDoc
 - Considera casos edge y validaciones de datos
+- **[NUEVO]** Prueba scroll en modales con contenido dinámico
+- **[NUEVO]** Verifica sincronización entre estado temporal y persistente
+- **[NUEVO]** Valida accesibilidad con navegación por teclado completa
 
 **Comunicación:**
 - Explica cómo abordarás cada módulo según esta plantilla
 - Documenta cualquier ambigüedad formulando preguntas específicas
 - Actualiza la PlantillaConfig con aprendizajes nuevos
 - Espera confirmación si hay múltiples enfoques válidos
+- **[NUEVO]** Documenta explícitamente el flujo de estado temporal vs persistente
+- **[NUEVO]** Explica consideraciones de rendimiento y cleanup de memoria
 
 **Arquitectura Modular:**
 - Mantén separación clara entre componentes (Toolbar, DataManager, etc.)
 - Usa ES6+ modules y async/await consistentemente
 - Implementa comunicación entre componentes vía callbacks
 - Preserva el estado global en app.js
+- **[NUEVO]** Implementa comunicación asíncrona con manejo de errores
+- **[NUEVO]** Usa patrón de callbacks temporales para cambios no persistentes
+- **[NUEVO]** Considera performance en operaciones que afectan DOM dinámicamente
 
 **Próximas Fases Identificadas:**
 1. ✅ **FASE 1**: Arquitectura y barra superior [COMPLETADA]
@@ -451,3 +615,6 @@ Al consultar esta PlantillaConfig, actúa como un programador full stack y:
 - ✅ Sistema de vistas (diaria, semanal, mensual, sprint) listo para implementar
 - ✅ Flujo de datos temporal vs persistente completamente resuelto
 - ✅ Testing implementado para verificar correcto funcionamiento
+- ✅ Sistema de componentes con lifecycle management implementado
+- ✅ Design system y CSS variables listas para uso en Canvas
+- ✅ Headers personalizados listos para integración en diagrama visual
