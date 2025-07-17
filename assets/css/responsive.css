@@ -69,7 +69,6 @@
     }
     /* Contenido principal adaptativo */
     .main-content {
-        padding: var(--spacing-sm);
         grid-template-rows: 1fr;
         gap: var(--spacing-md);
     }
@@ -237,7 +236,6 @@
     }
     /* Canvas más grande */
     .canvas-container {
-        height: 650px;
     }
     /* Contenido con más espacio */
     .main-content {
