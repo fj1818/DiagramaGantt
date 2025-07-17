@@ -17,13 +17,14 @@ class Toolbar {
             closePanel: null,
             fileInput: null,
             customizationPanel: null,
-            viewButtons: null
+            viewSelect: null,
+            sprintDateInput: null
         };
 
         // Estado del componente
         this.state = {
             isCustomizationOpen: false,
-            currentView: 'weekly',
+            currentView: 'daily',
             isLoading: false,
             hasUnsavedChanges: false
         };
@@ -89,7 +90,8 @@ class Toolbar {
         }
 
         // Elementos opcionales
-        this.elements.viewButtons = document.querySelectorAll('.btn-view');
+        this.elements.viewSelect = document.querySelector('#view-select');
+        this.elements.sprintDateInput = document.querySelector('#sprint-date');
     }
 
     /**
@@ -106,10 +108,17 @@ class Toolbar {
         // Input de archivo
         this.elements.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
 
-        // Botones de vista
-        this.elements.viewButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleViewChange(e));
-        });
+        // Cambio de vista
+        if (this.elements.viewSelect) {
+            this.elements.viewSelect.addEventListener('change', (e) => this.handleViewChange(e));
+        }
+        if (this.elements.sprintDateInput) {
+            this.elements.sprintDateInput.addEventListener('change', () => {
+                if (this.state.currentView === 'sprint') {
+                    this.handleViewChange();
+                }
+            });
+        }
 
         // Eventos globales
         document.addEventListener('click', (e) => this.handleOutsideClick(e));
@@ -148,6 +157,10 @@ class Toolbar {
     initializeState() {
         // Establece vista por defecto
         this.setActiveView(this.state.currentView);
+        if (this.elements.viewSelect) {
+            this.elements.viewSelect.value = this.state.currentView;
+        }
+        this.toggleSprintDateInput(this.state.currentView === 'sprint');
 
         // Oculta panel de personalización
         this.closeCustomization();
@@ -258,20 +271,19 @@ class Toolbar {
     /**
      * Maneja cambio de vista
      */
-    async handleViewChange(event) {
-        const viewType = event.target.dataset.view;
-        if (!viewType || viewType === this.state.currentView) return;
+    async handleViewChange() {
+        const viewType = this.elements.viewSelect ? this.elements.viewSelect.value : null;
+        if (!viewType) return;
+
+        const sprintStartDate = viewType === 'sprint' && this.elements.sprintDateInput
+            ? this.elements.sprintDateInput.value || new Date().toISOString().split('T')[0]
+            : null;
+
+        if (viewType === this.state.currentView && viewType !== 'sprint') {
+            return;
+        }
 
         try {
-            this.setButtonLoading(event.target, true);
-
-            // Solicitar fecha de sprint si es necesario
-            let sprintStartDate = null;
-            if (viewType === 'sprint') {
-                sprintStartDate = await this.promptSprintDate();
-                if (!sprintStartDate) return; // Usuario canceló
-            }
-
             if (this.callbacks.onViewChange) {
                 const result = await this.callbacks.onViewChange(viewType, sprintStartDate);
 
@@ -287,8 +299,6 @@ class Toolbar {
             }
         } catch (error) {
             this.handleError('Error al cambiar vista', error);
-        } finally {
-            this.setButtonLoading(event.target, false);
         }
     }
 
@@ -377,12 +387,25 @@ class Toolbar {
      */
     setActiveView(viewType) {
         this.state.currentView = viewType;
+        this.toggleSprintDateInput(viewType === 'sprint');
+        if (this.elements.viewSelect) {
+            this.elements.viewSelect.value = viewType;
+        }
+    }
 
-        this.elements.viewButtons.forEach(btn => {
-            const isActive = btn.dataset.view === viewType;
-            btn.classList.toggle('active', isActive);
-            btn.setAttribute('aria-pressed', isActive.toString());
-        });
+    /**
+     * Muestra u oculta el campo de fecha para sprint
+     */
+    toggleSprintDateInput(show) {
+        if (!this.elements.sprintDateInput) return;
+        if (show) {
+            if (!this.elements.sprintDateInput.value) {
+                this.elements.sprintDateInput.value = new Date().toISOString().split('T')[0];
+            }
+            this.elements.sprintDateInput.hidden = false;
+        } else {
+            this.elements.sprintDateInput.hidden = true;
+        }
     }
 
     /**
@@ -438,25 +461,6 @@ class Toolbar {
             reader.onerror = () => reject(new Error('Error al leer archivo'));
             reader.readAsText(file);
         });
-    }
-
-    /**
-     * Solicita fecha de inicio de sprint
-     */
-    async promptSprintDate() {
-        const date = prompt(
-            'Ingresa la fecha de inicio del sprint (YYYY-MM-DD):',
-            new Date().toISOString().split('T')[0]
-        );
-
-        if (!date) return null;
-
-        // Validar formato de fecha
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-            throw new Error('Formato de fecha inválido. Use YYYY-MM-DD');
-        }
-
-        return date;
     }
 
     /**

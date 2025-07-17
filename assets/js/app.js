@@ -8,6 +8,7 @@
 
 import Toolbar from './components/Toolbar.js';
 import TaskTableModal from './components/TaskTableModal.js';
+import CanvasRenderer from './modules/CanvasRenderer.js';
 
 class DiagramaGanttApp {
     constructor() {
@@ -25,7 +26,7 @@ class DiagramaGanttApp {
                 },
                 settings: this.getDefaultSettings(),
                 view: {
-                    type: 'weekly',
+                    type: 'daily',
                     scale: 1,
                     startDate: null,
                     endDate: null
@@ -154,10 +155,12 @@ class DiagramaGanttApp {
             onTemporaryChange: this.handleModalChanges.bind(this) // Nuevo callback para cambios temporales
         });
 
+        // Inicializar CanvasRenderer para dibujar el diagrama
+        this.components.canvasRenderer = new CanvasRenderer('gantt-canvas');
+
         // TODO: Inicializar otros componentes cuando estén implementados
         /*
         this.components.taskTable = new TaskTable();
-        this.components.canvasRenderer = new CanvasRenderer();
         this.components.viewManager = new ViewManager();
         this.components.styleManager = new StyleManager();
         this.components.exportManager = new ExportManager();
@@ -261,8 +264,9 @@ class DiagramaGanttApp {
             // Guardar en localStorage
             await this.saveToLocalStorage();
 
-            // TODO: Actualizar canvas y vista cuando estén implementados
+            // Actualizar diagrama inmediatamente
             this.updateAllComponents();
+            this.renderDiagram();
 
             // Notificar éxito
             const headerInfo = headers ? ` (${headers.proyecto}: ${headers.tarea})` : '';
@@ -427,8 +431,24 @@ class DiagramaGanttApp {
      * Actualiza todos los componentes
      */
     updateAllComponents() {
-        // TODO: Implementar actualización de componentes
         console.log('🔄 Actualizando componentes...');
+        this.renderDiagram();
+    }
+
+    /**
+     * Renderiza el diagrama en el canvas según la vista actual
+     */
+    renderDiagram() {
+        if (!this.components.canvasRenderer) return;
+
+        const viewType = this.state.persistent.view.type;
+
+        if (viewType === 'daily') {
+            this.components.canvasRenderer.renderDaily(
+                this.state.persistent.tasks,
+                this.state.persistent.headers
+            );
+        }
     }
 
     /**
@@ -693,7 +713,7 @@ class DiagramaGanttApp {
      * Configura auto-guardado
      */
     setupAutoSave() {
-        setInterval(() => {
+        this.autoSaveInterval = setInterval(() => {
             if (this.state.isInitialized) {
                 this.saveToLocalStorage();
             }

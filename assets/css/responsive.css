@@ -67,14 +67,10 @@
     .view-controls {
         padding: var(--spacing-xs) var(--spacing-md);
     }
-    .btn-view {
-        padding: var(--spacing-xs) var(--spacing-sm);
-        font-size: var(--font-size-xs);
-    }
     /* Contenido principal adaptativo */
     .main-content {
-        padding: var(--spacing-md);
-        grid-template-rows: auto auto 1fr;
+        padding: var(--spacing-sm);
+        grid-template-rows: 1fr;
         gap: var(--spacing-md);
     }
     /* Canvas más pequeño */
@@ -155,30 +151,12 @@
     .customization-panel:not([hidden]) {
         transform: translateY(0);
     }
-    /* Botones de vista como carrusel */
-    .view-buttons {
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        gap: var(--spacing-xs);
-        padding: var(--spacing-xs);
-    }
-    .view-buttons::-webkit-scrollbar {
-        display: none;
-    }
-    .btn-view {
-        flex: 0 0 auto;
-        min-width: 80px;
-        padding: var(--spacing-sm);
-        font-size: var(--font-size-xs);
-    }
     /* Contenido principal en móvil */
     .main-content {
         padding: var(--spacing-sm);
         gap: var(--spacing-sm);
     }
-    /* Secciones apiladas en móvil */
-    .task-section,
+    /* Sección del diagrama en móvil */
     .diagram-section {
         padding: var(--spacing-sm);
     }
@@ -228,10 +206,6 @@
         font-size: var(--font-size-base);
     }
     /* Vista simplificada */
-    .btn-view {
-        min-width: 60px;
-        padding: var(--spacing-xs);
-    }
     /* Contenido ultra compacto */
     .main-content {
         padding: var(--spacing-xs);
@@ -263,11 +237,11 @@
     }
     /* Canvas más grande */
     .canvas-container {
-        height: 500px;
+        height: 650px;
     }
     /* Contenido con más espacio */
     .main-content {
-        padding: var(--spacing-2xl);
+        padding: var(--spacing-lg);
     }
 }
 
@@ -318,9 +292,6 @@
     .btn {
         min-height: 44px;
         min-width: 44px;
-    }
-    .btn-view {
-        min-height: 44px;
     }
     .btn-close {
         min-height: 44px;
