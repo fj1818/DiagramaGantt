@@ -295,7 +295,7 @@
 .view-controls {
     background: white;
     border-bottom: var(--border-width) solid var(--gray-200);
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
     box-shadow: var(--shadow-sm);
     display: flex;
     align-items: center;
