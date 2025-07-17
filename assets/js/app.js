@@ -25,7 +25,7 @@ class DiagramaGanttApp {
                 },
                 settings: this.getDefaultSettings(),
                 view: {
-                    type: 'weekly',
+                    type: 'daily',
                     scale: 1,
                     startDate: null,
                     endDate: null
@@ -693,7 +693,7 @@ class DiagramaGanttApp {
      * Configura auto-guardado
      */
     setupAutoSave() {
-        setInterval(() => {
+        this.autoSaveInterval = setInterval(() => {
             if (this.state.isInitialized) {
                 this.saveToLocalStorage();
             }
