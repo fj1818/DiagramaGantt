@@ -67,10 +67,6 @@
     .view-controls {
         padding: var(--spacing-xs) var(--spacing-md);
     }
-    .btn-view {
-        padding: var(--spacing-xs) var(--spacing-sm);
-        font-size: var(--font-size-xs);
-    }
     /* Contenido principal adaptativo */
     .main-content {
         padding: var(--spacing-md);
@@ -155,23 +151,6 @@
     .customization-panel:not([hidden]) {
         transform: translateY(0);
     }
-    /* Botones de vista como carrusel */
-    .view-buttons {
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        gap: var(--spacing-xs);
-        padding: var(--spacing-xs);
-    }
-    .view-buttons::-webkit-scrollbar {
-        display: none;
-    }
-    .btn-view {
-        flex: 0 0 auto;
-        min-width: 80px;
-        padding: var(--spacing-sm);
-        font-size: var(--font-size-xs);
-    }
     /* Contenido principal en móvil */
     .main-content {
         padding: var(--spacing-sm);
@@ -228,10 +207,6 @@
         font-size: var(--font-size-base);
     }
     /* Vista simplificada */
-    .btn-view {
-        min-width: 60px;
-        padding: var(--spacing-xs);
-    }
     /* Contenido ultra compacto */
     .main-content {
         padding: var(--spacing-xs);
@@ -318,9 +293,6 @@
     .btn {
         min-height: 44px;
         min-width: 44px;
-    }
-    .btn-view {
-        min-height: 44px;
     }
     .btn-close {
         min-height: 44px;

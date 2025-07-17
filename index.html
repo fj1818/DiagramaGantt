@@ -84,20 +84,14 @@
 
         <!-- Botones de Vista -->
         <nav class="view-controls" role="navigation" aria-label="Controles de vista del diagrama">
-            <div class="view-buttons" role="group" aria-label="Seleccionar tipo de vista">
-                <button id="btn-view-daily" class="btn-view" type="button" aria-pressed="false" data-view="daily">
-                    📅 Diaria
-                </button>
-                <button id="btn-view-weekly" class="btn-view active" type="button" aria-pressed="true" data-view="weekly">
-                    📆 Semanal
-                </button>
-                <button id="btn-view-monthly" class="btn-view" type="button" aria-pressed="false" data-view="monthly">
-                    🗓️ Mensual
-                </button>
-                <button id="btn-view-sprint" class="btn-view" type="button" aria-pressed="false" data-view="sprint">
-                    🚀 Sprint
-                </button>
-            </div>
+            <label for="view-select" class="sr-only">Seleccionar vista</label>
+            <select id="view-select" class="view-select" aria-label="Seleccionar vista">
+                <option value="daily">📅 Diaria</option>
+                <option value="weekly">📆 Semanal</option>
+                <option value="monthly">🗓️ Mensual</option>
+                <option value="sprint">🚀 Sprint</option>
+            </select>
+            <input type="date" id="sprint-date" class="sprint-date-input" hidden>
         </nav>
 
         <!-- Área Principal del Contenido -->
