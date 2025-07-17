@@ -69,7 +69,6 @@
     }
     /* Contenido principal adaptativo */
     .main-content {
-        padding: var(--spacing-md);
         grid-template-rows: 1fr;
         gap: var(--spacing-md);
     }
@@ -237,11 +236,10 @@
     }
     /* Canvas más grande */
     .canvas-container {
-        height: 600px;
     }
     /* Contenido con más espacio */
     .main-content {
-        padding: var(--spacing-2xl);
+        padding: var(--spacing-lg);
     }
 }
 
