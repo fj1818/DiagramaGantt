@@ -25,7 +25,7 @@ class DiagramaGanttApp {
                 },
                 settings: this.getDefaultSettings(),
                 view: {
-                    type: 'weekly',
+                    type: 'daily',
                     scale: 1,
                     startDate: null,
                     endDate: null
