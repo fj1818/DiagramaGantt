@@ -693,7 +693,7 @@ class DiagramaGanttApp {
      * Configura auto-guardado
      */
     setupAutoSave() {
-        setInterval(() => {
+        this.autoSaveInterval = setInterval(() => {
             if (this.state.isInitialized) {
                 this.saveToLocalStorage();
             }
